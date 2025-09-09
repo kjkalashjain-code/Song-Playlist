@@ -37,7 +37,22 @@ public:
     }
 };
 
+
+//insert a song
 void insertattail(song* &head, song* &tail, const char n[], const char s[]) {
+    // Check for duplicates first
+    if (head != nullptr) {
+        song* check = head;
+        do {
+            if (equals(check->name, n)) {
+                cout << "song already exists" << endl;
+                return;
+            }
+            check = check->next;
+        } while (check != head);  // stop when we come back to head
+    }
+
+    // Create new node after confirming no duplicate
     song* temp = new song(n, s);
 
     if (head == nullptr) {
@@ -48,11 +63,16 @@ void insertattail(song* &head, song* &tail, const char n[], const char s[]) {
         // append after tail and fix circular links
         tail->next = temp;
         temp->previous = tail;
+        temp->next = head;
+        head->previous = temp;
         tail = temp;
-        tail->next = head;
-        head->previous = tail;
     }
 }
+
+
+
+// to remove a particular song
+
 void remove(const char songn[], song* &head, song* &tail) {
     if (head == nullptr) return;
 
@@ -88,6 +108,8 @@ void remove(const char songn[], song* &head, song* &tail) {
 }
 
 
+//to print playlist
+
 void printlist(song* head) {
     if (head == nullptr) return;      // guard empty list
     song* temp = head;
@@ -96,6 +118,9 @@ void printlist(song* head) {
         temp = temp->next;
     } while (temp != head);
 }
+
+
+//to delete a playlist
 
 void deleteplaylist(song* &head, song* &tail) {
     if (head == nullptr) return;
@@ -116,6 +141,9 @@ void deleteplaylist(song* &head, song* &tail) {
     tail = nullptr;
 }
 
+
+//to search by name
+
 void searchbyname (char n[] , song* &head){
     song* temp = head;
     while (temp != NULL){
@@ -128,6 +156,28 @@ void searchbyname (char n[] , song* &head){
     }
     cout<<"song not found"<<endl;
 }
+
+
+
+//to search by singer
+
+void searchbysinger(char n[], song* &head) {
+    song* temp = head;
+    bool found = false;
+
+    while (temp != NULL) {
+        if (equals(temp->singer, n)) {
+            cout << temp->name << " " << temp->singer << endl;
+            found = true;
+        }
+        temp = temp->next;
+    }
+
+    if (!found) {
+        cout << "song not found" << endl;
+    }
+}
+
 
 
 int main() {
